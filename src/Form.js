@@ -1,4 +1,4 @@
-import React, { useContext, Fragment } from "react";
+import React, { useContext, Fragment} from "react";
 import { Button, TextField } from "@material-ui/core";
 import { DetailsContext } from "./Context";
 import Grid from "@material-ui/core/Grid";
@@ -9,15 +9,22 @@ import MenuItem from "@material-ui/core/MenuItem";
 
 export function Form({onSubmit, onCancel}) {
     const {
-        handleChange,
         filedError,
         isError,
-        fields
+        users,
+        fields,
+        addDetails,
+        handleChange
     } = useContext(DetailsContext);
     const isEmpty =
         fields.name.length > 0 &&
         fields.gender.length > 0 &&
         fields.email.length > 0;
+
+     const submit = () => {
+         addDetails({fields})
+     }
+
 
     return (
         <Fragment>
@@ -82,7 +89,7 @@ export function Form({onSubmit, onCancel}) {
                     variant="text"
                     disabled={!isEmpty || isError}
                     color="primary"
-                    onClick={onSubmit}
+                    onClick={()=> {submit(); onSubmit()}}
                 >
                     Add
                 </Button>

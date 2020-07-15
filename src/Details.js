@@ -9,7 +9,8 @@ import {DetailsContext} from "./Context";
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
-        maxWidth: 360,
+        display: 'flex',
+        justifyContent: 'space-evenly',
         backgroundColor: theme.palette.background.paper,
     },
     details: {
@@ -20,9 +21,8 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function Details() {
+export default function Details( {user}) {
     const classes = useStyles();
-    const {fields} = useContext(DetailsContext);
 
     return (
         <List className={classes.root}>
@@ -36,20 +36,19 @@ export default function Details() {
                     </Typography>
                 </Fragment>
                 <ListItem>
-                    <ListItemText primary="Name:" secondary={fields.name}/>
+                    <ListItemText primary="Name:" secondary={user.fields.name}/>
                 </ListItem>
                 <ListItem>
-                    <ListItemText primary="Age:" secondary={fields.age ?? "-"}/>
+                    <ListItemText primary="Age:" secondary={user.fields.age ?? "-"}/>
                 </ListItem>
                 <ListItem>
-                    <ListItemText primary="Email:" secondary={fields.email}/>
+                    <ListItemText primary="Email:" secondary={user.fields.email}/>
                 </ListItem>
                 <ListItem>
-                    <ListItemText primary="Gender:" secondary={fields.gender}/>
+                    <ListItemText primary="Gender:" secondary={user.fields.gender}/>
                 </ListItem>
             </div>
         </List>
 
     )
-        ;
 }

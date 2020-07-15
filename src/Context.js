@@ -1,4 +1,5 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useState, useEffect } from "react";
+import PropTypes from "prop-types";
 
 export const DetailsContext = createContext({});
 
@@ -6,7 +7,7 @@ const emailRegex = RegExp(/^[^@]+@[^@]+\.[^@]+$/)
 const ageRegex = RegExp(/^[0-9]{0,2}$/)
 const nameRegex = RegExp(/^[a-zA-Z ]{2,30}$/)
 
-const initialState = {
+const initialUsers = {
     name: "",
     email: "",
     gender: "",
@@ -14,9 +15,9 @@ const initialState = {
 
 const DetailsContextProvider = props => {
 
-    const [fields, setFields] = useState(initialState)
+    const [users, setUsers] = useState([]);
 
-    const [added, setAdded] = useState(false)
+    const [fields, setFields] = useState(initialUsers)
 
     const [filedError, setFieldError] = useState({
         ...fields
@@ -25,22 +26,22 @@ const DetailsContextProvider = props => {
     const [isError, setIsError] = useState(false)
 
     const cancel = () => {
-        setFields(initialState)
-        setAdded(false);
+        setFields(initialUsers)
     }
 
+    const addDetails = () => {
+        setUsers([...users, { fields }]);
+        setFields(initialUsers)
+    };
 
+    const uniq = () => Date.now();
 
     const handleChange = input => ({ target: { value } }) => {
-        // Set values to the fields
         setFields({
             ...fields,
             [input]: value
         })
 
-        setAdded(true)
-
-        // Handle errors
         const formErrors = { ...filedError }
 
         switch (input) {
@@ -61,11 +62,10 @@ const DetailsContextProvider = props => {
                 break
         }
 
-        // set error hook
         Object.values(formErrors).forEach(error =>
             error.length > 0 ? setIsError(true) : setIsError(false)
         )
-        // set errors hook
+
         setFieldError({
             ...formErrors
         })
@@ -74,17 +74,28 @@ const DetailsContextProvider = props => {
     return (
         <DetailsContext.Provider
             value={{
-                added,
                 handleChange,
                 filedError,
                 isError,
                 fields,
-                cancel
+                cancel,
+                users,
+                addDetails,
+                uniq
             }}
         >
             {props.children}
         </DetailsContext.Provider>
     );
+};
+
+DetailsContext.PropTypes = {
+    fields: PropTypes.exact({
+        name: PropTypes.string,
+        age: PropTypes.number,
+        email: PropTypes.email,
+        gender: PropTypes.string
+    })
 };
 
 export default DetailsContextProvider;
